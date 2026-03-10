@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayurveda Academy Pro - Guida Completa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap');
+
+        :root {
+            --ayur-green: #2d5a27;
+            --ayur-gold: #c5a059;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fdfbf7;
+            color: #333;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .card-flip {
+            perspective: 1000px;
+        }
+
+        .card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .tab-active {
+            border-bottom: 3px solid var(--ayur-green);
+            color: var(--ayur-green);
+            font-weight: 700;
+        }
+
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-inner {
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Navbar Gamificata -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="bg-green-700 p-2 rounded-lg">
+                    <i data-lucide="leaf" class="text-white w-6 h-6"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-green-900">Ayurveda <span class="text-yellow-600">Academy Pro</span></h1>
+            </div>
+
+            <div class="flex items-center gap-6 bg-stone-50 px-4 py-2 rounded-full border">
+                <div class="flex flex-col items-center">
+                    <span class="text-xs uppercase text-stone-500 font-bold">Livello</span>
+                    <span id="level-name" class="text-sm font-bold text-green-800">Neofita</span>
+                </div>
+                <div class="flex flex-col w-32 md:w-48">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span id="xp-display">0 XP</span>
+                        <span id="next-level-xp">150 XP</span>
+                    </div>
+                    <div class="w-full bg-stone-200 rounded-full h-2">
+                        <div id="xp-progress" class="bg-green-600 h-2 rounded-full progress-bar-inner" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center border-l pl-4">
+                    <i data-lucide="award" class="text-yellow-500 w-5 h-5"></i>
+                    <span id="badges-count" class="text-xs font-bold">0 Badge</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigazione -->
+    <nav class="bg-white border-b overflow-x-auto">
+        <div class="max-w-4xl mx-auto flex justify-around">
+            <button onclick="switchTab('study')" id="tab-study" class="px-6 py-4 flex items-center gap-2 transition-all tab-active">
+                <i data-lucide="book-open" class="w-5 h-5"></i> Studio
+            </button>
+            <button onclick="switchTab('flashcards')" id="tab-flashcards" class="px-6 py-4 flex items-center gap-2 transition-all">
+                <i data-lucide="layers" class="w-5 h-5"></i> Flashcards
+            </button>
+            <button onclick="switchTab('quiz')" id="tab-quiz" class="px-6 py-4 flex items-center gap-2 transition-all">
+                <i data-lucide="brain-circuit" class="w-5 h-5"></i> Quiz Master
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        
+        <!-- SEZIONE STUDIO -->
+        <section id="section-study" class="space-y-6">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-stone-100">
+                <h2 class="text-3xl font-bold text-green-900 mb-6">Guida di Studio Integrata</h2>
+                <div class="prose max-w-none text-stone-700 space-y-4">
+                    <p>L'Ayurveda si basa sull'equilibrio dei <strong>Panchamahabhuta</strong> (Etere, Aria, Fuoco, Acqua, Terra) che si manifestano nei tre <strong>Dosha</strong>: Vata, Pitta e Kapha.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                        <div class="p-4 bg-orange-50 rounded-xl border border-orange-100">
+                            <h4 class="font-bold text-orange-800">Agni vs Ama</h4>
+                            <p class="text-sm italic">Il segreto della salute è un Agni (fuoco digestivo) forte che previene la formazione di Ama (tossine).</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                            <h4 class="font-bold text-blue-800">Ojas</h4>
+                            <p class="text-sm italic">L'essenza vitale prodotta dai Dhatu (tessuti) che sostiene l'immunità.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-green-800">Principi di Trattamento</h3>
+                    <p>La terapia (<strong>Chikitsa</strong>) segue la legge dei contrari: bilanciare uno squilibrio applicando qualità opposte (es. calore per il freddo).</p>
+                    
+                    <button onclick="awardXP(50, 'Studio Completato')" class="mt-6 bg-green-700 text-white px-8 py-3 rounded-full font-bold btn-hover flex items-center gap-2">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i> Completa Studio (+50 XP)
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE FLASHCARDS -->
+        <section id="section-flashcards" class="hidden space-y-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-green-900">Il Mazzo dei 25 Concetti</h2>
+                <p class="text-stone-500">Impara i pilastri dell'Ayurveda. 5 XP per ogni nuova scoperta.</p>
+            </div>
+
+            <div class="flex flex-col items-center gap-8">
+                <div class="flex items-center gap-4 md:gap-8 w-full justify-center">
+                    <button onclick="prevCard()" class="p-3 rounded-full bg-white border shadow-sm hover:bg-stone-50">
+                        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                    </button>
+
+                    <div class="card-flip w-full max-w-md h-72" onclick="flipCard()">
+                        <div id="card-inner" class="card-inner relative w-full h-full shadow-lg rounded-3xl border border-stone-200 bg-white">
+                            <div class="card-front absolute inset-0 bg-white rounded-3xl flex flex-col">
+                                <span id="card-num-top" class="absolute top-4 left-4 text-xs font-bold text-stone-300">#1</span>
+                                <h3 id="card-front-text" class="text-2xl font-bold text-green-800">Ayurveda</h3>
+                                <p class="mt-4 text-xs text-stone-400">Clicca per girare</p>
+                            </div>
+                            <div class="card-back absolute inset-0 bg-green-50 rounded-3xl border-2 border-green-100 p-8">
+                                <p id="card-back-text" class="text-lg leading-relaxed text-stone-700">Scienza della vita; sistema olistico per l'equilibrio di corpo, mente e spirito.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="nextCard()" class="p-3 rounded-full bg-white border shadow-sm hover:bg-stone-50">
+                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <div class="h-1 w-48 bg-stone-200 rounded-full overflow-hidden">
+                        <div id="card-progress-bar" class="h-full bg-green-600 transition-all duration-300" style="width: 4%"></div>
+                    </div>
+                    <span id="card-index-display" class="font-mono font-bold text-stone-400">01 / 25</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE QUIZ -->
+        <section id="section-quiz" class="hidden space-y-6">
+            <div id="quiz-intro" class="text-center py-12 bg-white rounded-3xl shadow-sm border">
+                <i data-lucide="graduation-cap" class="w-16 h-16 text-green-700 mx-auto mb-4"></i>
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">Esame Finale Academy</h2>
+                <p class="text-stone-500 mb-8 max-w-sm mx-auto">10 domande per testare la tua maestria. Ogni risposta corretta vale 15 XP.</p>
+                <button onclick="startQuiz()" class="bg-green-700 text-white px-10 py-4 rounded-full font-bold text-lg btn-hover">Inizia Esame</button>
+            </div>
+
+            <div id="quiz-container" class="hidden space-y-4">
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
+                    <div class="flex gap-2">
+                        <span id="q-step" class="bg-stone-100 text-stone-600 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest">Domanda 1/10</span>
+                    </div>
+                    <div id="q-score" class="font-bold text-green-700">Punti: 0</div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-md border border-stone-100">
+                    <h3 id="q-text" class="text-xl font-bold text-stone-800 mb-8">...</h3>
+                    <div id="q-options" class="grid gap-3"></div>
+                </div>
+
+                <div id="q-feedback" class="hidden p-4 rounded-xl text-center font-bold animate-pulse"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modale Level Up -->
+    <div id="modal-lv" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] p-8 max-w-sm w-full text-center shadow-2xl scale-in border-4 border-yellow-400">
+            <div class="w-24 h-24 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="trophy" class="text-yellow-600 w-12 h-12"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-stone-800 mb-2">Nuovo Grado!</h2>
+            <p class="text-stone-500 mb-6 italic">Il tuo spirito è ora quello di un <br><span id="modal-lv-name" class="font-bold text-2xl text-green-700">Studioso</span></p>
+            <button onclick="closeModal()" class="w-full bg-green-700 text-white py-4 rounded-2xl font-bold shadow-lg">Prosegui il Cammino</button>
+        </div>
+    </div>
+
+    <!-- Feedback Toast -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-stone-800 text-white px-6 py-3 rounded-full opacity-0 transition-all pointer-events-none z-[200]"></div>
+
+    <script>
+        // --- DATASET COMPLETO ---
+        const flashcards = [
+            { front: "Ayurveda", back: "La 'Scienza della vita'; sistema olistico per l'equilibrio di corpo, mente e spirito." },
+            { front: "Panchamahabhuta", back: "I 5 elementi: Etere, Aria, Fuoco, Acqua e Terra." },
+            { front: "Tre Dosha", back: "Vata, Pitta e Kapha; le tre energie biologiche primarie." },
+            { front: "Vata Dosha", back: "Aria + Etere; governa il movimento, il respiro e il sistema nervoso." },
+            { front: "Pitta Dosha", back: "Fuoco + Acqua; governa la digestione, il calore e il metabolismo." },
+            { front: "Kapha Dosha", back: "Terra + Acqua; governa la struttura, la stabilità e la lubrificazione." },
+            { front: "Prakriti", back: "La costituzione individuale immutabile stabilita al concepimento." },
+            { front: "Vikriti", back: "Lo stato attuale di squilibrio influenzato dallo stile di vita." },
+            { front: "Agni", back: "Il fuoco digestivo; trasforma il cibo in energia e tessuti." },
+            { front: "Ama", back: "Tossine accumulate dovute a una digestione incompleta." },
+            { front: "I 7 Dhatu", back: "I tessuti corporei: Plasma, Sangue, Muscolo, Grasso, Osso, Midollo, Riproduttivo." },
+            { front: "Ojas", back: "Essenza vitale e base dell'immunità, prodotta dal nutrimento dei tessuti." },
+            { front: "I 3 Guna", back: "Qualità mentali: Sattva (armonia), Rajas (azione), Tamas (inerzia)." },
+            { front: "Dinacharya", back: "La routine quotidiana per sincronizzarsi con i ritmi naturali." },
+            { front: "Panchakarma", back: "Protocollo clinico di purificazione profonda in 5 fasi." },
+            { front: "I 6 Rasa", back: "I sapori: Dolce, Acido, Salato, Piccante, Amaro, Astringente." },
+            { front: "Madhura (Dolce)", back: "Costruisce i tessuti e calma i nervi; riduce Vata e Pitta." },
+            { front: "Virya", back: "L'energia termica di un'erba (Ushna - calda, Sheeta - fredda)." },
+            { front: "Vipaka", back: "L'effetto post-digestivo a lungo termine di una sostanza." },
+            { front: "Srotas", back: "I canali fisici ed energetici del corpo." },
+            { front: "I 3 Mala", back: "Gli scarti: feci, urina e sudore." },
+            { front: "Nadi Pariksha", back: "Diagnosi del polso per valutare gli organi e i dosha." },
+            { front: "Spezie", back: "La prima forma di medicina preventiva per equilibrare Agni." },
+            { front: "Chikitsa", back: "Il principio della terapia basato sulla legge dei contrari." },
+            { front: "Obiettivo Finale", back: "Salute perfetta per raggiungere la liberazione spirituale (Moksha)." }
+        ];
+
+        const quizQuestions = [
+            { q: "Cosa significa letteralmente Ayurveda?", options: ["Scienza della vita", "Studio delle erbe", "Fuoco della digestione", "Sistema di movimento"], correct: 0, hint: "Ayur significa vita." },
+            { q: "Quali elementi compongono principalmente Pitta?", options: ["Aria ed Etere", "Terra e Acqua", "Fuoco e Acqua", "Terra e Fuoco"], correct: 2, hint: "Pitta è calore trasformante." },
+            { q: "Cos'è la 'Prakriti'?", options: ["Costituzione baseline immutabile", "Stato di squilibrio attuale", "Canale energetico", "Tossina digestiva"], correct: 0, hint: "Si determina alla nascita." },
+            { q: "Perché l'Agni è essenziale?", options: ["È la forza vitale del respiro", "È il metabolismo che processa cibo e vita", "Lubrifica le articolazioni", "Elimina i capelli in eccesso"], correct: 1, hint: "Senza fuoco non c'è trasformazione." },
+            { q: "Cos'è l'Ama?", options: ["Essenza vitale", "Accumulo tossico da cattiva digestione", "Routine giornaliera", "Effetto post-digestivo"], correct: 1, hint: "È il residuo appiccicoso." },
+            { q: "Quale termine descrive l'immunità vitale?", options: ["Guna", "Mala", "Ojas", "Srotas"], correct: 2, hint: "È l'essenza pura del corpo." },
+            { q: "Qual è lo scopo del Panchakarma?", options: ["Diagnosi del polso", "Energia termica erbe", "Purificare espellendo Dosha e Ama", "Scegliere il sapore del pasto"], correct: 2, hint: "Cleansing profondo." },
+            { q: "Quanti sono i Rasa (sapori) fondamentali?", options: ["Tre", "Quattro", "Cinque", "Sei"], correct: 3, hint: "Includono l'Astringente." },
+            { q: "A cosa si riferisce il concetto di 'Virya'?", options: ["Energia termica (caldo/freddo)", "Effetto post-digestivo", "Canale bersaglio", "Sei sapori"], correct: 0, hint: "Pensa alla potenza termica." },
+            { q: "Qual è il principio base della terapia (Chikitsa)?", options: ["Aumentare il Dosha dominante", "Applicare qualità opposte allo squilibrio", "Sopprimere solo i sintomi", "Digiunare sempre"], correct: 1, hint: "Se hai caldo, usa il freddo." }
+        ];
+
+        // --- STATO ---
+        let state = {
+            xp: 0,
+            level: 1,
+            currentCard: 0,
+            seenCards: new Set(),
+            quizIdx: 0,
+            quizPoints: 0,
+            levelNames: ["Neofita", "Apprendista", "Studioso", "Saggio", "Medico", "Guru", "Maestro Rishikesh"]
+        };
+
+        // --- INIT ---
+        window.onload = () => {
+            lucide.createIcons();
+            renderCard();
+        };
+
+        function switchTab(id) {
+            ['study', 'flashcards', 'quiz'].forEach(t => {
+                document.getElementById('section-' + t).classList.add('hidden');
+                document.getElementById('tab-' + t).classList.remove('tab-active');
+            });
+            document.getElementById('section-' + id).classList.remove('hidden');
+            document.getElementById('tab-' + id).classList.add('tab-active');
+            lucide.createIcons();
+        }
+
+        function awardXP(amt, reason) {
+            state.xp += amt;
+            showToast(`+${amt} XP: ${reason}`);
+            const nextXp = state.level * 150;
+            if (state.xp >= nextXp) {
+                state.level++;
+                showLevelUp();
+            }
+            updateGamification();
+        }
+
+        function updateGamification() {
+            document.getElementById('xp-display').innerText = `${state.xp} XP`;
+            const nextXp = state.level * 150;
+            document.getElementById('next-level-xp').innerText = `${nextXp} XP`;
+            document.getElementById('xp-progress').style.width = `${(state.xp / nextXp) * 100}%`;
+            document.getElementById('level-name').innerText = state.levelNames[Math.min(state.level-1, 6)];
+        }
+
+        // --- FLASHCARDS ---
+        function renderCard() {
+            const card = flashcards[state.currentCard];
+            document.getElementById('card-front-text').innerText = card.front;
+            document.getElementById('card-back-text').innerText = card.back;
+            document.getElementById('card-num-top').innerText = `#${String(state.currentCard + 1).padStart(2, '0')}`;
+            document.getElementById('card-index-display').innerText = `${String(state.currentCard + 1).padStart(2, '0')} / 25`;
+            document.getElementById('card-progress-bar').style.width = `${((state.currentCard + 1) / 25) * 100}%`;
+            document.getElementById('card-inner').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            document.getElementById('card-inner').classList.toggle('flipped');
+            if(!state.seenCards.has(state.currentCard)) {
+                state.seenCards.add(state.currentCard);
+                awardXP(5, "Scoperta");
+            }
+        }
+
+        function nextCard() {
+            state.currentCard = (state.currentCard + 1) % 25;
+            renderCard();
+        }
+
+        function prevCard() {
+            state.currentCard = (state.currentCard - 1 + 25) % 25;
+            renderCard();
+        }
+
+        // --- QUIZ ---
+        function startQuiz() {
+            state.quizIdx = 0;
+            state.quizPoints = 0;
+            document.getElementById('quiz-intro').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = quizQuestions[state.quizIdx];
+            document.getElementById('q-step').innerText = `Domanda ${state.quizIdx + 1} / 10`;
+            document.getElementById('q-text').innerText = q.q;
+            document.getElementById('q-score').innerText = `Punti: ${state.quizPoints}`;
+            
+            const optBox = document.getElementById('q-options');
+            optBox.innerHTML = '';
+            q.options.forEach((opt, i) => {
+                const b = document.createElement('button');
+                b.className = "w-full text-left p-4 rounded-2xl border-2 border-stone-100 hover:border-green-200 hover:bg-green-50 transition-all font-medium";
+                b.innerText = opt;
+                b.onclick = () => checkAns(i);
+                optBox.appendChild(b);
+            });
+        }
+
+        function checkAns(idx) {
+            const q = quizQuestions[state.quizIdx];
+            const feedback = document.getElementById('q-feedback');
+            feedback.classList.remove('hidden');
+            
+            if(idx === q.correct) {
+                state.quizPoints += 15;
+                awardXP(15, "Risposta Esatta");
+                feedback.innerText = "✓ Eccellente! +15 XP";
+                feedback.className = "p-4 rounded-xl text-center font-bold bg-green-100 text-green-700";
+            } else {
+                feedback.innerText = "✗ Riprova nel prossimo studio. " + q.hint;
+                feedback.className = "p-4 rounded-xl text-center font-bold bg-red-50 text-red-600";
+            }
+
+            setTimeout(() => {
+                feedback.classList.add('hidden');
+                state.quizIdx++;
+                if(state.quizIdx < 10) showQuestion();
+                else finishQuiz();
+            }, 2000);
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-container').innerHTML = `
+                <div class="text-center py-12 bg-white rounded-3xl shadow-lg border-2 border-green-100">
+                    <i data-lucide="party-popper" class="w-16 h-16 text-yellow-500 mx-auto mb-4"></i>
+                    <h2 class="text-3xl font-bold text-stone-800 mb-2">Panchakarma Mentale!</h2>
+                    <p class="text-stone-500 mb-6">Punteggio: ${state.quizPoints} / 150</p>
+                    <button onclick="location.reload()" class="bg-green-700 text-white px-8 py-3 rounded-xl font-bold">Ricomincia</button>
+                </div>
+            `;
+            awardXP(100, "Corso Completato");
+            lucide.createIcons();
+        }
+
+        // --- UI UTILS ---
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.opacity = "1";
+            t.style.bottom = "40px";
+            setTimeout(() => { t.style.opacity = "0"; t.style.bottom = "30px"; }, 2500);
+        }
+
+        function showLevelUp() {
+            document.getElementById('modal-lv-name').innerText = state.levelNames[Math.min(state.level-1, 6)];
+            document.getElementById('modal-lv').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-lv').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
