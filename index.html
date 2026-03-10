@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ayurveda Academy Pro - Learning Path</title>
+    <title>Ayurveda Academy Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -24,28 +24,56 @@
             font-family: 'Playfair Display', serif;
         }
 
-       .card-flip { perspective: 1000px; }
-       .card-inner { transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; }
-       .card-inner.flipped { transform: rotateY(180deg); }
-       .card-front,.card-back { backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 1.5rem; text-align: center; }
-       .card-back { transform: rotateY(180deg); }
+        /* Animazioni */
+        .card-flip { perspective: 1000px; }
+        .card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .card-inner.flipped { transform: rotateY(180deg); }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .card-back { transform: rotateY(180deg); }
 
-       .tab-active { border-bottom: 3px solid var(--ayur-green); color: var(--ayur-green); font-weight: 700; }
-       .btn-hover { transition: all 0.3s ease; }
-       .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        
-       .module-card { transition: all 0.3s ease; border-left: 4px solid transparent; }
-       .module-card:hover { border-left-color: var(--ayur-green); background-color: #f9fafb; }
-       .module-content { display: none; }
-       .module-active.module-content { display: block; }
-       .module-active { border-left-color: var(--ayur-green); background-color: #f1f8e9!important; }
+        .tab-active {
+            border-bottom: 3px solid var(--ayur-green);
+            color: var(--ayur-green);
+            font-weight: 700;
+        }
 
-       .progress-bar-inner { transition: width 0.5s ease-in-out; }
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-inner { transition: width 0.5s ease-in-out; }
+
+        /* Accordion Study Style */
+        .study-module {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .study-module:hover {
+            background-color: #f8fafc;
+            border-color: var(--ayur-green);
+        }
+        .content-hidden { display: none; }
     </style>
 </head>
 <body class="min-h-screen">
 
-    <header class="bg-white border-b sticky top-0 z-50">
+    <!-- Header & Gamification -->
+    <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
         <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-2">
                 <div class="bg-green-700 p-2 rounded-lg">
@@ -55,273 +83,344 @@
             </div>
 
             <div class="flex items-center gap-6 bg-stone-50 px-4 py-2 rounded-full border">
-                <div class="flex flex-col items-center text-center min-w-[60px]">
-                    <span class="text-[10px] uppercase text-stone-500 font-bold">Livello</span>
-                    <span id="level-name" class="text-sm font-bold text-green-800 leading-none">Neofita</span>
+                <div class="flex flex-col items-center">
+                    <span class="text-xs uppercase text-stone-500 font-bold">Livello</span>
+                    <span id="level-name" class="text-sm font-bold text-green-800">Neofita</span>
                 </div>
                 <div class="flex flex-col w-32 md:w-48">
-                    <div class="flex justify-between text-[10px] mb-1 font-bold text-stone-400 uppercase">
+                    <div class="flex justify-between text-xs mb-1">
                         <span id="xp-display">0 XP</span>
                         <span id="next-level-xp">150 XP</span>
                     </div>
-                    <div class="w-full bg-stone-200 rounded-full h-1.5">
-                        <div id="xp-progress" class="bg-green-600 h-1.5 rounded-full progress-bar-inner" style="width: 0%"></div>
+                    <div class="w-full bg-stone-200 rounded-full h-2">
+                        <div id="xp-progress" class="bg-green-600 h-2 rounded-full progress-bar-inner" style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="flex flex-col items-center border-l pl-4">
                     <i data-lucide="award" class="text-yellow-500 w-5 h-5"></i>
-                    <span id="badges-count" class="text-xs font-bold leading-none mt-1">0</span>
+                    <span id="badges-count" class="text-xs font-bold">0 Badge</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <nav class="bg-white border-b overflow-x-auto">
+    <!-- Navigation -->
+    <nav class="bg-white border-b sticky top-[73px] md:top-[65px] z-40 overflow-x-auto">
         <div class="max-w-4xl mx-auto flex justify-around">
-            <button onclick="switchTab('study')" id="tab-study" class="px-6 py-4 flex items-center gap-2 transition-all tab-active text-sm">
-                <i data-lucide="book-open" class="w-4 h-4 text-green-700"></i> STUDIO
+            <button onclick="switchTab('study')" id="tab-study" class="px-6 py-4 flex items-center gap-2 transition-all tab-active">
+                <i data-lucide="book-open" class="w-5 h-5"></i> Studio
             </button>
-            <button onclick="switchTab('flashcards')" id="tab-flashcards" class="px-6 py-4 flex items-center gap-2 transition-all text-sm">
-                <i data-lucide="layers" class="w-4 h-4"></i> CARDS
+            <button onclick="switchTab('flashcards')" id="tab-flashcards" class="px-6 py-4 flex items-center gap-2 transition-all">
+                <i data-lucide="layers" class="w-5 h-5"></i> Flashcards
             </button>
-            <button onclick="switchTab('quiz')" id="tab-quiz" class="px-6 py-4 flex items-center gap-2 transition-all text-sm">
-                <i data-lucide="brain-circuit" class="w-4 h-4"></i> QUIZ
+            <button onclick="switchTab('quiz')" id="tab-quiz" class="px-6 py-4 flex items-center gap-2 transition-all">
+                <i data-lucide="brain-circuit" class="w-5 h-5"></i> Quiz Master
             </button>
         </div>
     </nav>
 
     <main class="max-w-4xl mx-auto px-4 py-8">
         
+        <!-- SECTION: STUDIO (INTERATTIVA) -->
         <section id="section-study" class="space-y-6">
-            <div class="mb-8">
-                <h2 class="text-3xl font-bold text-green-900 mb-2">Curriculum Integrato</h2>
-                <p class="text-stone-500">Esplora i moduli del sapere ayurvedico per sbloccare XP bonus.</p>
-            </div>
-
-            <div class="space-y-4">
-                <div id="mod-1" class="module-card bg-white p-6 rounded-2xl shadow-sm border border-stone-100 cursor-pointer" onclick="toggleModule(1)">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-green-800">1. Cosmogonia e Fondamenti Filosofici</h3>
-                        <i data-lucide="chevron-down" class="text-stone-400 w-5 h-5"></i>
-                    </div>
-                    <div class="module-content mt-4 border-t pt-4 text-stone-700 leading-relaxed space-y-4">
-                        <p>L’Ayurveda poggia sul sistema <strong>Samkhya</strong>, che cataloga le 25 entità (tattwas) dell'universo. Tutto nasce dall'incontro tra <strong>Purusha</strong> (pura coscienza) e <strong>Prakruti</strong> (materia primordiale).[2, 7]</p>
-                        <p>L’interazione è guidata dai tre <strong>Gunas</strong>: 
-                           <br>• <strong>Sattva</strong>: Equilibrio, purezza e luce.
-                           <br>• <strong>Rajas</strong>: Attività, movimento ed ego.
-                           <br>• <strong>Tamas</strong>: Inerzia, stasi e oscurità.</p>
-                    </div>
+            <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-stone-100">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-green-900 mb-2">Guida di Studio Integrata</h2>
+                    <p class="text-stone-500">Esplora i moduli interattivi per approfondire la scienza della vita. Clicca su ogni titolo per espandere il contenuto.</p>
                 </div>
 
-                <div id="mod-2" class="module-card bg-white p-6 rounded-2xl shadow-sm border border-stone-100 cursor-pointer" onclick="toggleModule(2)">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-green-800">2. Il Sistema Tridosha</h3>
-                        <i data-lucide="chevron-down" class="text-stone-400 w-5 h-5"></i>
+                <div id="study-accordion" class="space-y-4">
+                    <!-- Modulo 1 -->
+                    <div class="study-module border rounded-2xl overflow-hidden" onclick="toggleModule(1)">
+                        <div class="p-5 flex justify-between items-center bg-stone-50 hover:bg-stone-100 transition-colors">
+                            <h3 class="font-bold text-green-800 text-lg flex items-center gap-3">
+                                <span class="bg-green-700 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs">01</span>
+                                Fondamenti Cosmologici: Il Sistema Samkhya
+                            </h3>
+                            <i data-lucide="chevron-down" id="icon-1" class="text-stone-400 transition-transform"></i>
+                        </div>
+                        <div id="module-1" class="content-hidden p-6 bg-white border-t space-y-3 text-stone-700 leading-relaxed">
+                            <p>L’architettura teorica dell'Ayurveda poggia sul sistema filosofico <strong>Samkhya</strong> (IX secolo a.C.). Secondo questa cosmogonia, la creazione emana dall'incontro di due principi:</p>
+                            <ul class="list-disc ml-6 space-y-1">
+                                <li><strong>Purusha:</strong> Lo spirito primordiale o pura coscienza.</li>
+                                <li><strong>Prakruti:</strong> La natura creativa o materia primordiale.</li>
+                            </ul>
+                            <p>La salute è vista come il mantenimento della connessione tra la coscienza individuale e l'intelligenza cosmica.</p>
+                        </div>
                     </div>
-                    <div class="module-content mt-4 border-t pt-4 text-stone-700 leading-relaxed space-y-4">
-                        <p>I cinque elementi formano i tre principi biologici o <strong>Dosha</strong> [2]:</p>
-                        <div class="grid md:grid-cols-3 gap-3">
-                            <div class="p-3 bg-blue-50 rounded-lg text-sm font-medium"><strong>Vata (Aria+Etere)</strong>: Governa il sistema nervoso e il movimento.</div>
-                            <div class="p-3 bg-red-50 rounded-lg text-sm font-medium"><strong>Pitta (Fuoco+Acqua)</strong>: Governa il metabolismo e la digestione.</div>
-                            <div class="p-3 bg-emerald-50 rounded-lg text-sm font-medium"><strong>Kapha (Terra+Acqua)</strong>: Governa la struttura e la stabilità.</div>
+
+                    <!-- Modulo 2 -->
+                    <div class="study-module border rounded-2xl overflow-hidden" onclick="toggleModule(2)">
+                        <div class="p-5 flex justify-between items-center bg-stone-50 hover:bg-stone-100">
+                            <h3 class="font-bold text-green-800 text-lg flex items-center gap-3">
+                                <span class="bg-green-700 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs">02</span>
+                                I Cinque Elementi e i Tre Dosha
+                            </h3>
+                            <i data-lucide="chevron-down" id="icon-2" class="text-stone-400"></i>
+                        </div>
+                        <div id="module-2" class="content-hidden p-6 bg-white border-t space-y-4 text-stone-700">
+                            <p>Tutta la materia è composta dai <strong>Panchamahabhuta</strong> (Etere, Aria, Fuoco, Acqua, Terra). Nel corpo umano, questi elementi si aggregano nei tre <strong>Dosha</strong>:</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-blue-50 p-4 rounded-xl">
+                                    <h4 class="font-bold text-blue-800">Vata (Aria+Etere)</h4>
+                                    <p class="text-sm">Principio del movimento e del sistema nervoso.</p>
+                                </div>
+                                <div class="bg-red-50 p-4 rounded-xl">
+                                    <h4 class="font-bold text-red-800">Pitta (Fuoco+Acqua)</h4>
+                                    <p class="text-sm">Principio della trasformazione e digestione.</p>
+                                </div>
+                                <div class="bg-emerald-50 p-4 rounded-xl">
+                                    <h4 class="font-bold text-emerald-800">Kapha (Terra+Acqua)</h4>
+                                    <p class="text-sm">Principio della coesione e struttura.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modulo 3 -->
+                    <div class="study-module border rounded-2xl overflow-hidden" onclick="toggleModule(3)">
+                        <div class="p-5 flex justify-between items-center bg-stone-50 hover:bg-stone-100">
+                            <h3 class="font-bold text-green-800 text-lg flex items-center gap-3">
+                                <span class="bg-green-700 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs">03</span>
+                                Dhatus, Agni e Ama
+                            </h3>
+                            <i data-lucide="chevron-down" id="icon-3" class="text-stone-400"></i>
+                        </div>
+                        <div id="module-3" class="content-hidden p-6 bg-white border-t space-y-3 text-stone-700">
+                            <p>Il corpo è composto da 7 tessuti (<strong>Dhatu</strong>) nutriti da <strong>Agni</strong>, il fuoco digestivo centrale. Se Agni è debole, si produce <strong>Ama</strong>, una sostanza tossica e appiccicosa che ostruisce i canali (Srotas) ed è la causa primaria di malattia.</p>
+                        </div>
+                    </div>
+
+                    <!-- Modulo 4 -->
+                    <div class="study-module border rounded-2xl overflow-hidden" onclick="toggleModule(4)">
+                        <div class="p-5 flex justify-between items-center bg-stone-50 hover:bg-stone-100">
+                            <h3 class="font-bold text-green-800 text-lg flex items-center gap-3">
+                                <span class="bg-green-700 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs">04</span>
+                                Chikitsa: Il Principio della Terapia
+                            </h3>
+                            <i data-lucide="chevron-down" id="icon-4" class="text-stone-400"></i>
+                        </div>
+                        <div id="module-4" class="content-hidden p-6 bg-white border-t space-y-3 text-stone-700">
+                            <p>La terapia ayurvedica si basa sulla legge dei contrari. Se un Dosha è aggravato da certe qualità (Guna), il trattamento consiste nell'introdurre qualità opposte. Esempio: Vata (freddo e secco) viene bilanciato da calore e oliatura.</p>
                         </div>
                     </div>
                 </div>
 
-                <div id="mod-3" class="module-card bg-white p-6 rounded-2xl shadow-sm border border-stone-100 cursor-pointer" onclick="toggleModule(3)">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-green-800">3. I Sette Dhatu e Ojas</h3>
-                        <i data-lucide="chevron-down" class="text-stone-400 w-5 h-5"></i>
-                    </div>
-                    <div class="module-content mt-4 border-t pt-4 text-stone-700 leading-relaxed space-y-4">
-                        <p>Il corpo è sostenuto dai sette tessuti (<strong>Dhatu</strong>) che si nutrono sequenzialmente: Rasa (plasma), Rakta (sangue), Mamsa (muscolo), Meda (grasso), Asthi (osso), Majja (midollo/nervi) e Shukra (riproduttivo).[2]</p>
-                        <p>L'essenza finale del metabolismo è <strong>Ojas</strong>, la forza vitale che risiede nel cuore e governa l'immunità.[2, 7]</p>
-                    </div>
-                </div>
-
-                <div id="mod-4" class="module-card bg-white p-6 rounded-2xl shadow-sm border border-stone-100 cursor-pointer" onclick="toggleModule(4)">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-green-800">4. Samprapti: Le Fasi della Malattia</h3>
-                        <i data-lucide="chevron-down" class="text-stone-400 w-5 h-5"></i>
-                    </div>
-                    <div class="module-content mt-4 border-t pt-4 text-stone-700 leading-relaxed space-y-4 font-medium">
-                        <p>A differenza della medicina occidentale, l'Ayurveda identifica 6 stadi di progressione [1, 2]:</p>
-                        <ol class="list-decimal list-inside space-y-1">
-                            <li><strong>Sanchaya</strong>: Accumulo quantitativo nei siti naturali.</li>
-                            <li><strong>Prakopa</strong>: Aggravamento qualitativo o "viziamento".</li>
-                            <li><strong>Prasara</strong>: Diffusione sistemica tramite sangue e linfa.</li>
-                            <li><strong>Sthana Samsraya</strong>: Localizzazione in un punto debole.</li>
-                            <li><strong>Vyakti</strong>: Manifestazione dei sintomi clinici.</li>
-                            <li><strong>Bheda</strong>: Cronicità o danni tissutali irreversibili.</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <div id="mod-5" class="module-card bg-white p-6 rounded-2xl shadow-sm border border-stone-100 cursor-pointer" onclick="toggleModule(5)">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-green-800">5. Diagnosi (Ashtavidha Pariksha)</h3>
-                        <i data-lucide="chevron-down" class="text-stone-400 w-5 h-5"></i>
-                    </div>
-                    <div class="module-content mt-4 border-t pt-4 text-stone-700 leading-relaxed space-y-4">
-                        <p>L'esame ottuplo comprende l'analisi di: Polso (<strong>Nadi</strong>), Lingua (Jihwa), Occhi (Drik), Urine (Mutra), Feci (Mala), Voce (Shabda), Tatto (Sparsha) e Aspetto (Akruti).[3, 2]</p>
-                        <p><em>Il polso Vata è rapido come un serpente, il Pitta saltellante come una rana, il Kapha lento come un cigno.[4, 2]</em></p>
-                    </div>
-                </div>
-
-                <div id="mod-6" class="module-card bg-white p-6 rounded-2xl shadow-sm border border-stone-100 cursor-pointer" onclick="toggleModule(6)">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-green-800">6. Panchakarma e Nutrizione</h3>
-                        <i data-lucide="chevron-down" class="text-stone-400 w-5 h-5"></i>
-                    </div>
-                    <div class="module-content mt-4 border-t pt-4 text-stone-700 leading-relaxed space-y-4">
-                        <p>Il <strong>Panchakarma</strong> include le 5 azioni di purificazione profonda: Vamana (emesi), Virechana (purgazione), Basti (clisteri), Nasya (nasale) e Raktamokshana (salasso).[5, 2]</p>
-                        <p>La nutrizione si basa sui 6 sapori (<strong>Rasa</strong>): Dolce, Acido, Salato, Pungente, Amaro e Astringente. Ogni pasto equilibrato deve includerli tutti.[2, 8]</p>
-                    </div>
-                </div>
-
-                <div id="mod-7" class="module-card bg-white p-6 rounded-2xl shadow-sm border border-stone-100 cursor-pointer" onclick="toggleModule(7)">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-green-800">7. Scienza Moderna e Sicurezza</h3>
-                        <i data-lucide="chevron-down" class="text-stone-400 w-5 h-5"></i>
-                    </div>
-                    <div class="module-content mt-4 border-t pt-4 text-stone-700 leading-relaxed space-y-4">
-                        <p>Nel 2025 l'OMS ha integrato l'Ayurveda nell'ICD-11.[9] La ricerca moderna valida l'efficacia di erbe come l'<strong>Ashwagandha</strong> per lo stress e la <strong>Curcuma</strong> per l'infiammazione.[10, 11]</p>
-                        <p><strong>Sicurezza</strong>: È cruciale monitorare la qualità per evitare contaminazioni da metalli pesanti (piombo, mercurio) presenti in prodotti non standardizzati.[12, 13]</p>
-                    </div>
+                <div class="mt-10 border-t pt-8 text-center">
+                    <button id="btn-complete-study" onclick="completeStudyAction()" class="bg-green-700 text-white px-10 py-4 rounded-full font-bold btn-hover flex items-center gap-2 mx-auto">
+                        <i data-lucide="check-circle" class="w-6 h-6"></i>
+                        Completa studio (+50 XP)
+                    </button>
+                    <p id="study-status" class="mt-4 text-sm text-green-600 font-bold hidden">Hai completato il modulo di studio!</p>
                 </div>
             </div>
-
-            <button onclick="finalizeStudy()" id="btn-complete-study" class="w-full mt-8 bg-green-700 text-white px-8 py-4 rounded-3xl font-bold btn-hover flex justify-center items-center gap-3">
-                <i data-lucide="check-circle" class="w-6 h-6"></i> Completa studio accademico (+50 XP)
-            </button>
         </section>
 
-        <section id="section-flashcards" class="hidden space-y-8">
+        <!-- SECTION: FLASHCARDS (RIPRISTINATA) -->
+        <section id="section-flashcards" class="hidden space-y-8 animate-in">
             <div class="text-center">
                 <h2 class="text-3xl font-bold text-green-900">Il Mazzo dei 25 Concetti</h2>
-                <p class="text-stone-500 text-sm">Gira le carte per guadagnare 5 XP ciascuna.</p>
+                <p class="text-stone-500">Gira le carte per memorizzare i termini tecnici. 5 XP per ogni nuova scoperta.</p>
             </div>
-            <div class="flex flex-col items-center gap-6">
+
+            <div class="flex flex-col items-center gap-8">
                 <div class="flex items-center gap-4 md:gap-8 w-full justify-center">
-                    <button onclick="prevCard()" class="p-3 rounded-full bg-white border shadow-sm hover:bg-stone-50"><i data-lucide="chevron-left"></i></button>
+                    <button onclick="prevCard()" class="p-3 rounded-full bg-white border shadow-sm hover:bg-stone-50">
+                        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                    </button>
+
                     <div class="card-flip w-full max-w-md h-72" onclick="flipCard()">
                         <div id="card-inner" class="card-inner relative w-full h-full shadow-lg rounded-3xl border border-stone-200 bg-white">
-                            <div class="card-front absolute inset-0 bg-white rounded-3xl flex flex-col uppercase tracking-wider">
-                                <span id="card-num-top" class="absolute top-4 left-4 text-[10px] font-black text-stone-300">#01</span>
+                            <div class="card-front absolute inset-0 bg-white rounded-3xl flex flex-col">
+                                <span id="card-num-top" class="absolute top-4 left-4 text-xs font-bold text-stone-300">#01</span>
                                 <h3 id="card-front-text" class="text-2xl font-bold text-green-800">Ayurveda</h3>
+                                <p class="mt-4 text-xs text-stone-400">Clicca per girare</p>
                             </div>
                             <div class="card-back absolute inset-0 bg-green-50 rounded-3xl border-2 border-green-100 p-8">
                                 <p id="card-back-text" class="text-lg leading-relaxed text-stone-700">Scienza della vita; sistema olistico per l'equilibrio di corpo, mente e spirito.</p>
                             </div>
                         </div>
                     </div>
-                    <button onclick="nextCard()" class="p-3 rounded-full bg-white border shadow-sm hover:bg-stone-50"><i data-lucide="chevron-right"></i></button>
+
+                    <button onclick="nextCard()" class="p-3 rounded-full bg-white border shadow-sm hover:bg-stone-50">
+                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                    </button>
                 </div>
-                <div class="flex items-center gap-2">
+                
+                <div class="flex items-center gap-4">
                     <div class="h-1 w-48 bg-stone-200 rounded-full overflow-hidden">
-                        <div id="card-progress-bar" class="h-full bg-green-600" style="width: 4%"></div>
+                        <div id="card-progress-bar" class="h-full bg-green-600 transition-all duration-300" style="width: 4%"></div>
                     </div>
-                    <span id="card-index-display" class="font-mono font-bold text-stone-400 text-xs">01 / 25</span>
+                    <span id="card-index-display" class="font-mono font-bold text-stone-400">01 / 25</span>
                 </div>
             </div>
         </section>
 
+        <!-- SECTION: QUIZ MASTER (RIPRISTINATA) -->
         <section id="section-quiz" class="hidden space-y-6">
             <div id="quiz-intro" class="text-center py-12 bg-white rounded-3xl shadow-sm border">
                 <i data-lucide="graduation-cap" class="w-16 h-16 text-green-700 mx-auto mb-4"></i>
-                <h2 class="text-3xl font-bold text-stone-800 mb-2">Esame Finale</h2>
-                <p class="text-stone-500 mb-8 max-w-sm mx-auto">10 domande estratte dalle monografie. Ogni risposta vale 15 XP.</p>
-                <button onclick="startQuiz()" class="bg-green-700 text-white px-10 py-4 rounded-full font-bold text-lg btn-hover uppercase tracking-widest">Inizia Test</button>
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">Quiz Master</h2>
+                <p class="text-stone-500 mb-8 max-w-sm mx-auto">10 domande per testare la tua maestria. Ogni risposta corretta vale 15 XP.</p>
+                <button onclick="startQuiz()" class="bg-green-700 text-white px-10 py-4 rounded-full font-bold text-lg btn-hover">Inizia Quiz</button>
             </div>
+
             <div id="quiz-container" class="hidden space-y-4">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
-                    <span id="q-step" class="text-xs font-bold text-stone-400 uppercase">Domanda 1/10</span>
+                    <span id="q-step" class="bg-stone-100 text-stone-600 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest">Domanda 1/10</span>
                     <div id="q-score" class="font-bold text-green-700">Punti: 0</div>
                 </div>
+
                 <div class="bg-white p-8 rounded-3xl shadow-md border border-stone-100">
                     <h3 id="q-text" class="text-xl font-bold text-stone-800 mb-8">...</h3>
                     <div id="q-options" class="grid gap-3"></div>
                 </div>
+
                 <div id="q-feedback" class="hidden p-4 rounded-xl text-center font-bold"></div>
             </div>
         </section>
     </main>
 
-    <div id="modal-lv" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm hidden z- flex items-center justify-center p-4">
+    <!-- Modale Level Up -->
+    <div id="modal-lv" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
         <div class="bg-white rounded-[2.5rem] p-8 max-w-sm w-full text-center shadow-2xl border-4 border-yellow-400">
-            <i data-lucide="trophy" class="text-yellow-600 w-16 h-16 mx-auto mb-4"></i>
-            <h2 class="text-2xl font-bold text-stone-800 mb-2">Nuovo Grado Sbloccato!</h2>
-            <p id="modal-lv-name" class="font-bold text-2xl text-green-700">Studioso</p>
-            <button onclick="closeModal()" class="w-full mt-6 bg-green-700 text-white py-4 rounded-2xl font-bold">Continua</button>
+            <div class="w-24 h-24 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="trophy" class="text-yellow-600 w-12 h-12"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-stone-800 mb-2">Nuovo Grado!</h2>
+            <p class="text-stone-500 mb-6 italic">Il tuo spirito è ora quello di un <br><span id="modal-lv-name" class="font-bold text-2xl text-green-700">Apprendista</span></p>
+            <button onclick="closeModal()" class="w-full bg-green-700 text-white py-4 rounded-2xl font-bold shadow-lg">Prosegui</button>
         </div>
     </div>
 
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-stone-800 text-white px-6 py-3 rounded-full opacity-0 transition-all pointer-events-none z-"></div>
+    <!-- Feedback Toast -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-stone-800 text-white px-6 py-3 rounded-full opacity-0 transition-all pointer-events-none z-[200]"></div>
 
     <script>
-        // --- DATASET COMPLETO (Sincronizzato con risposte precedenti) ---
-        const flashcards =;
-
-        const quizQuestions =, correct: 0, hint: "Ayur = vita." },
-            { q: "Quali elementi compongono Pitta?", options:, correct: 2, hint: "Pitta è trasformazione." },
-            { q: "Cos'è la 'Prakriti'?", options:, correct: 0, hint: "Determinata alla nascita." },
-            { q: "Perché l'Agni è essenziale?", options: ["Governa il respiro", "Metabolismo che processa cibo e vita", "Lubrifica le articolazioni", "Elimina i capelli"], correct: 1, hint: "Senza fuoco non c'è crescita." },
-            { q: "Cos'è l'Ama?", options:, correct: 1, hint: "Ostruisce i canali." },
-            { q: "Quale termine descrive l'immunità vitale?", options:, correct: 2, hint: "È l'essenza pura." },
-            { q: "Scopo del Panchakarma?", options:, correct: 2, hint: "Detox profonda." },
-            { q: "Quanti sono i Rasa fondamentali?", options:, correct: 3, hint: "Include l'Amaro." },
-            { q: "Cos'è il 'Virya' in erboristeria?", options: ["Energia termica (caldo/freddo)", "Effetto post-digestivo", "Canale bersaglio", "Gusto sulla lingua"], correct: 0, hint: "Potenza termica." },
-            { q: "Principio base della terapia (Chikitsa)?", options:, correct: 1, hint: "Bilanciare il caldo col freddo." }
+        // --- DATASET COMPLETO ---
+        const flashcardsData = [
+            { front: "Ayurveda", back: "La 'Scienza della vita'; sistema olistico per l'equilibrio di corpo, mente e spirito." },
+            { front: "Panchamahabhuta", back: "I 5 elementi: Etere, Aria, Fuoco, Acqua e Terra." },
+            { front: "Tre Dosha", back: "Vata, Pitta e Kapha; le tre energie biologiche primarie." },
+            { front: "Vata Dosha", back: "Aria + Etere; governa il movimento, il respiro e il sistema nervoso." },
+            { front: "Pitta Dosha", back: "Fuoco + Acqua; governa la digestione, il calore e il metabolismo." },
+            { front: "Kapha Dosha", back: "Terra + Acqua; governa la struttura, la stabilità e la lubrificazione." },
+            { front: "Prakriti", back: "La costituzione individuale immutabile stabilita al concepimento." },
+            { front: "Vikriti", back: "Lo stato attuale di squilibrio influenzato dallo stile di vita." },
+            { front: "Agni", back: "Il fuoco digestivo; trasforma il cibo in energia e tessuti." },
+            { front: "Ama", back: "Tossine accumulate dovute a una digestione incompleta." },
+            { front: "I 7 Dhatu", back: "I tessuti corporei: Plasma, Sangue, Muscolo, Grasso, Osso, Midollo, Riproduttivo." },
+            { front: "Ojas", back: "Essenza vitale e base dell'immunità, prodotta dal nutrimento dei tessuti." },
+            { front: "I 3 Guna", back: "Qualità mentali: Sattva (armonia), Rajas (azione), Tamas (inerzia)." },
+            { front: "Dinacharya", back: "La routine quotidiana per sincronizzarsi con i ritmi naturali." },
+            { front: "Panchakarma", back: "Protocollo clinico di purificazione profonda in 5 fasi." },
+            { front: "I 6 Rasa", back: "I sapori: Dolce, Acido, Salato, Piccante, Amaro, Astringente." },
+            { front: "Madhura (Dolce)", back: "Costruisce i tessuti e calma i nervi; riduce Vata e Pitta." },
+            { front: "Virya", back: "L'energia termica di un'erba (Ushna - calda, Sheeta - fredda)." },
+            { front: "Vipaka", back: "L'effetto post-digestivo a lungo termine di una sostanza." },
+            { front: "Srotas", back: "I canali fisici ed energetici del corpo." },
+            { front: "I 3 Mala", back: "Gli scarti: feci, urina e sudore." },
+            { front: "Nadi Pariksha", back: "Diagnosi del polso per valutare gli organi e i dosha." },
+            { front: "Spezie", back: "La prima forma di medicina preventiva per equilibrare Agni." },
+            { front: "Chikitsa", back: "Il principio della terapia basato sulla legge dei contrari." },
+            { front: "Obiettivo Finale", back: "Salute perfetta per raggiungere la liberazione spirituale (Moksha)." }
         ];
 
+        const quizQuestionsData = [
+            { q: "Cosa significa letteralmente Ayurveda?", options: ["Scienza della vita", "Studio delle erbe", "Fuoco della digestione", "Sistema di movimento"], correct: 0 },
+            { q: "Quali elementi compongono principalmente Pitta?", options: ["Aria ed Etere", "Terra e Acqua", "Fuoco e Acqua", "Terra e Fuoco"], correct: 2 },
+            { q: "Cos'è la 'Prakriti'?", options: ["Costituzione baseline immutabile", "Stato di squilibrio attuale", "Canale energetico", "Tossina digestiva"], correct: 0 },
+            { q: "Perché l'Agni è essenziale?", options: ["È la forza vitale del respiro", "È il metabolismo che processa cibo e vita", "Lubrifica le articolazioni", "Elimina tossine spirituali"], correct: 1 },
+            { q: "Cos'è l'Ama?", options: ["Essenza vitale", "Accumulo tossico da cattiva digestione", "Routine giornaliera", "Effetto post-digestivo"], correct: 1 },
+            { q: "Quale termine descrive l'immunità vitale?", options: ["Guna", "Mala", "Ojas", "Srotas"], correct: 2 },
+            { q: "Qual è lo scopo del Panchakarma?", options: ["Diagnosi del polso", "Energia termica erbe", "Purificare espellendo Dosha e Ama", "Scegliere il sapore del pasto"], correct: 2 },
+            { q: "Quanti sono i Rasa (sapori) fondamentali?", options: ["Tre", "Quattro", "Cinque", "Sei"], correct: 3 },
+            { q: "A cosa si riferisce il concetto di 'Virya'?", options: ["Energia termica (caldo/freddo)", "Effetto post-digestivo", "Canale bersaglio", "Sei sapori"], correct: 0 },
+            { q: "Qual è il principio base della terapia (Chikitsa)?", options: ["Aumentare il Dosha dominante", "Applicare qualità opposte allo squilibrio", "Sopprimere solo i sintomi", "Digiunare sempre"], correct: 1 }
+        ];
+
+        // --- STATO ---
         let state = {
-            xp: 0, level: 1, currentCard: 0, seenCards: new Set(), seenModules: new Set(),
-            quizIdx: 0, quizPoints: 0, levelNames:
+            xp: 0,
+            level: 1,
+            currentCard: 0,
+            seenCards: new Set(),
+            quizIdx: 0,
+            quizPoints: 0,
+            studyCompleted: false,
+            levelNames: ["Neofita", "Apprendista", "Studioso", "Saggio", "Medico", "Guru", "Maestro Rishikesh"]
         };
 
-        window.onload = () => { lucide.createIcons(); renderCard(); updateGamification(); };
+        // --- INIT ---
+        window.onload = () => {
+            lucide.createIcons();
+            renderCard();
+            updateGamification();
+        };
 
+        // --- NAVIGATION ---
         function switchTab(id) {
-            ['study', 'flashcards', 'quiz'].forEach(t => {
+            const tabs = ['study', 'flashcards', 'quiz'];
+            tabs.forEach(t => {
                 document.getElementById('section-' + t).classList.add('hidden');
                 document.getElementById('tab-' + t).classList.remove('tab-active');
             });
             document.getElementById('section-' + id).classList.remove('hidden');
             document.getElementById('tab-' + id).classList.add('tab-active');
             lucide.createIcons();
+            window.scrollTo(0, 0);
         }
 
-        // --- STUDY LOGIC ---
+        // --- STUDY ACTIONS ---
         function toggleModule(id) {
-            const el = document.getElementById(`mod-${id}`);
-            const isActive = el.classList.contains('module-active');
+            const module = document.getElementById('module-' + id);
+            const icon = document.getElementById('icon-' + id);
+            const isHidden = module.classList.contains('content-hidden');
             
-            // Close others
-            document.querySelectorAll('.module-card').forEach(m => m.classList.remove('module-active'));
-            
-            if (!isActive) {
-                el.classList.add('module-active');
-                if(!state.seenModules.has(id)) {
-                    state.seenModules.add(id);
-                    awardXP(10, `Modulo ${id} analizzato`);
-                }
+            // Chiudi tutti gli altri
+            for(let i=1; i<=4; i++){
+                document.getElementById('module-' + i).classList.add('content-hidden');
+                document.getElementById('icon-' + i).style.transform = "rotate(0deg)";
+            }
+
+            if(isHidden) {
+                module.classList.remove('content-hidden');
+                icon.style.transform = "rotate(180deg)";
             }
         }
 
-        function finalizeStudy() {
-            if(state.seenModules.size < 4) {
-                showToast("Esplora più moduli prima di completare!");
-                return;
+        function completeStudyAction() {
+            if(!state.studyCompleted) {
+                state.studyCompleted = true;
+                awardXP(50, "Modulo di Studio Letto");
+                document.getElementById('btn-complete-study').classList.add('opacity-50', 'pointer-events-none');
+                document.getElementById('study-status').classList.remove('hidden');
             }
-            awardXP(50, "Studio Accademico Completato");
-            document.getElementById('btn-complete-study').innerHTML = "✓ Studio Concluso";
-            document.getElementById('btn-complete-study').disabled = true;
-            document.getElementById('btn-complete-study').classList.replace('bg-green-700', 'bg-stone-400');
         }
 
-        // --- FLASHCARDS LOGIC ---
+        // --- XP & LEVEL UP ---
+        function awardXP(amt, reason) {
+            state.xp += amt;
+            showToast(`+${amt} XP: ${reason}`);
+            const nextXp = state.level * 150;
+            if (state.xp >= nextXp) {
+                state.level++;
+                showLevelUp();
+            }
+            updateGamification();
+        }
+
+        function updateGamification() {
+            document.getElementById('xp-display').innerText = `${state.xp} XP`;
+            const nextXp = state.level * 150;
+            document.getElementById('next-level-xp').innerText = `${nextXp} XP`;
+            document.getElementById('xp-progress').style.width = `${(state.xp / nextXp) * 100}%`;
+            document.getElementById('level-name').innerText = state.levelNames[Math.min(state.level-1, 6)];
+        }
+
+        // --- FLASHCARDS ---
         function renderCard() {
-            const card = flashcards[state.currentCard];
+            const card = flashcardsData[state.currentCard];
             document.getElementById('card-front-text').innerText = card.front;
             document.getElementById('card-back-text').innerText = card.back;
             document.getElementById('card-num-top').innerText = `#${String(state.currentCard + 1).padStart(2, '0')}`;
@@ -329,28 +428,33 @@
             document.getElementById('card-progress-bar').style.width = `${((state.currentCard + 1) / 25) * 100}%`;
             document.getElementById('card-inner').classList.remove('flipped');
         }
+
         function flipCard() {
             document.getElementById('card-inner').classList.toggle('flipped');
             if(!state.seenCards.has(state.currentCard)) {
                 state.seenCards.add(state.currentCard);
-                awardXP(5, "Nuovo concetto");
+                awardXP(5, "Nuovo Concetto");
             }
         }
+
         function nextCard() { state.currentCard = (state.currentCard + 1) % 25; renderCard(); }
         function prevCard() { state.currentCard = (state.currentCard - 1 + 25) % 25; renderCard(); }
 
-        // --- QUIZ LOGIC ---
+        // --- QUIZ ---
         function startQuiz() {
-            state.quizIdx = 0; state.quizPoints = 0;
+            state.quizIdx = 0;
+            state.quizPoints = 0;
             document.getElementById('quiz-intro').classList.add('hidden');
             document.getElementById('quiz-container').classList.remove('hidden');
             showQuestion();
         }
+
         function showQuestion() {
-            const q = quizQuestions[state.quizIdx];
+            const q = quizQuestionsData[state.quizIdx];
             document.getElementById('q-step').innerText = `Domanda ${state.quizIdx + 1} / 10`;
             document.getElementById('q-text').innerText = q.q;
             document.getElementById('q-score').innerText = `Punti: ${state.quizPoints}`;
+            
             const optBox = document.getElementById('q-options');
             optBox.innerHTML = '';
             q.options.forEach((opt, i) => {
@@ -361,61 +465,56 @@
                 optBox.appendChild(b);
             });
         }
+
         function checkAns(idx) {
-            const q = quizQuestions[state.quizIdx];
+            const q = quizQuestionsData[state.quizIdx];
             const feedback = document.getElementById('q-feedback');
             feedback.classList.remove('hidden');
+            
             if(idx === q.correct) {
-                state.quizPoints += 15; awardXP(15, "Esatto!");
-                feedback.innerText = "✓ Eccellente! +15 XP";
+                state.quizPoints += 15;
+                awardXP(15, "Corretto");
+                feedback.innerText = "✓ Esatto! +15 XP";
                 feedback.className = "p-4 rounded-xl text-center font-bold bg-green-100 text-green-700";
             } else {
-                feedback.innerText = "✗ " + q.hint;
+                feedback.innerText = "✗ Sbagliato!";
                 feedback.className = "p-4 rounded-xl text-center font-bold bg-red-50 text-red-600";
             }
+
             setTimeout(() => {
                 feedback.classList.add('hidden');
                 state.quizIdx++;
                 if(state.quizIdx < 10) showQuestion();
                 else finishQuiz();
-            }, 2000);
+            }, 1500);
         }
+
         function finishQuiz() {
             document.getElementById('quiz-container').innerHTML = `
-                <div class="text-center py-12 bg-white rounded-3xl shadow-lg border-2 border-green-100">
-                    <i data-lucide="party-popper" class="w-16 h-16 text-yellow-500 mx-auto mb-4"></i>
-                    <h2 class="text-3xl font-bold text-stone-800 mb-2">Panchakarma Mentale!</h2>
-                    <p class="text-stone-500 mb-6">Punteggio: ${state.quizPoints} / 150</p>
-                    <button onclick="location.reload()" class="bg-green-700 text-white px-8 py-3 rounded-xl font-bold">Ricomincia Esame</button>
-                </div>`;
-            awardXP(100, "Diploma Academy Sbloccato");
+                <div class="text-center py-12">
+                    <i data-lucide="award" class="w-16 h-16 text-yellow-500 mx-auto mb-4"></i>
+                    <h2 class="text-2xl font-bold mb-2">Quiz Master Completato!</h2>
+                    <p class="text-stone-500 mb-6">Hai ottenuto ${state.quizPoints} punti.</p>
+                    <button onclick="location.reload()" class="bg-green-700 text-white px-8 py-3 rounded-xl font-bold">Riprova</button>
+                </div>
+            `;
+            awardXP(100, "Diploma Quiz Master");
             lucide.createIcons();
         }
 
-        // --- GAMIFICATION UTILS ---
-        function awardXP(amt, reason) {
-            state.xp += amt; showToast(`+${amt} XP: ${reason}`);
-            const nextXp = state.level * 150;
-            if (state.xp >= nextXp) { state.level++; showLevelUp(); }
-            updateGamification();
-        }
-        function updateGamification() {
-            document.getElementById('xp-display').innerText = `${state.xp} XP`;
-            const nextXp = state.level * 150;
-            document.getElementById('next-level-xp').innerText = `${nextXp} XP`;
-            document.getElementById('xp-progress').style.width = `${(state.xp / nextXp) * 100}%`;
-            document.getElementById('level-name').innerText = state.levelNames[Math.min(state.level-1, 6)];
-        }
+        // --- UI UTILS ---
         function showToast(msg) {
             const t = document.getElementById('toast');
-            t.innerText = msg; t.style.opacity = "1";
+            t.innerText = msg;
+            t.style.opacity = "1";
             setTimeout(() => { t.style.opacity = "0"; }, 2500);
         }
+
         function showLevelUp() {
             document.getElementById('modal-lv-name').innerText = state.levelNames[Math.min(state.level-1, 6)];
             document.getElementById('modal-lv').classList.remove('hidden');
-            lucide.createIcons();
         }
+
         function closeModal() { document.getElementById('modal-lv').classList.add('hidden'); }
     </script>
 </body>
